@@ -1,0 +1,44 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.9-SNAPSHOT'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'java'
+}
+
+group = 'me.moon'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+repositories {
+	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
+	maven { url 'https://repo.spring.io/snapshot' }
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	//JPA
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	//Test DB H2
+	runtimeOnly 'com.h2database:h2'
+	//Prod DB MySQL
+	runtimeOnly 'mysql:mysql-connector-java'
+	//Spring security
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+	//Spring session
+	implementation 'org.springframework.session:spring-session-core'
+	//Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+}
+
+test {
+	useJUnitPlatform()
+}
