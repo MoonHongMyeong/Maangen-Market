@@ -43,6 +43,10 @@ public class UserSaveRequest {
         this.nickname=nickname;
     }
 
+    public void encryptPassword(String encryptedPassword){
+        this.password=encryptedPassword;
+    }
+
     public User toEntity(){
         return User.builder()
                 .email(email)
