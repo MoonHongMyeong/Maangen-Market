@@ -15,6 +15,7 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE(400, "Invalid Type Value", "잘못된 type 입니다."),
 
     //User
+    UNAUTHORIZED_ACCESS(401, "Unautorized Access", "잘못된 사용자 접근입니다."),
     EMAIL_DUPLICATED(409, "Email Duplicated", "중복된 이메일 입니다."),
     PHONE_DUPLICATED(409, "Phone number Duplicated", "중복된 전화번호 입니다."),
     NICKNAME_DUPLICATED(409, "Nickname Duplicated", "중복된 닉네임 입니다.")
