@@ -16,7 +16,8 @@ public enum ErrorCode {
 
     //User
     EMAIL_DUPLICATED(409, "Email Duplicated", "중복된 이메일 입니다."),
-    PHONE_DUPLICATED(409, "Phone number Duplicated", "중복된 전화번호 입니다.")
+    PHONE_DUPLICATED(409, "Phone number Duplicated", "중복된 전화번호 입니다."),
+    NICKNAME_DUPLICATED(409, "Nickname Duplicated", "중복된 닉네임 입니다.")
     ;
 
     private final int status;
