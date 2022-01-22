@@ -26,7 +26,7 @@ public class PostService {
 
     public void create(PostSaveRequest dto, SessionUser user) {
 
-        Post post = dto.toEntity(userFindService.findBySessionUser(user));
+        Post post = dto.toEntity(userFindService.findUserBySessionUser(user));
         Category category = categoryFindService.findByCategoryName(dto.getCategory());
 
         post.setCategory(category);

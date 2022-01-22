@@ -14,7 +14,7 @@ public class UserFindService {
 
     private final UserRepository userRepository;
 
-    public User findBySessionUser(SessionUser user) {
+    public User findUserBySessionUser(SessionUser user) {
         return userRepository.findById(user.getId())
                 .orElseThrow(() -> new UserNotFoundException(user.getEmail()));
     }
