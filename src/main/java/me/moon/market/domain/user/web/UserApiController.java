@@ -42,7 +42,7 @@ public class UserApiController {
     @LoginRequired
     @PutMapping("/profile")
     public ResponseEntity<HttpStatus> updateMyProfile(@Valid UserUpdateRequest dto, @LoginUser SessionUser user){
-        
+
         userService.updateMyProfile(dto);
 
         return ResponseEntity.ok(HttpStatus.OK);
