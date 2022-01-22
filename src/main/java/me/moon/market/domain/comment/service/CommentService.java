@@ -34,6 +34,17 @@ public class CommentService {
         commentRepository.save(comment);
     }
 
+    public void reply(Long commentId, SessionUser sessionUser, CommentSaveRequest dto) {
+        Comment parents = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId.toString()));
+        User user = userFindService.findUserBySessionUser(sessionUser);
+
+
+        Comment comment = dto.toEntity(user, parents);
+
+        commentRepository.save(comment);
+    }
+
     public void update(Long commentId, SessionUser user, CommentUpdateRequest dto) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CommentNotFoundException(commentId.toString()));

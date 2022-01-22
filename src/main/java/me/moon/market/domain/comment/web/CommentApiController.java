@@ -32,6 +32,18 @@ public class CommentApiController {
     }
 
     @LoginRequired
+    @PostMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<HttpStatus> reply(@PathVariable(name = "postId") Long postId,
+                                             @PathVariable(name = "commentId") Long commentId,
+                                             @LoginUser SessionUser user,
+                                             @Valid CommentSaveRequest dto){
+
+        commentService.reply(commentId, user, dto);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @LoginRequired
     @PutMapping("/posts/{postId}/comments/{commentId}")
     public ResponseEntity<HttpStatus> update(@PathVariable(name = "postId") Long postId,
                                              @PathVariable(name = "commentId") Long commentId,

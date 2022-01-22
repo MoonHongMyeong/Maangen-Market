@@ -30,10 +30,10 @@ public class CommentSaveRequest {
                 .build();
     }
 
-    public Comment toEntity(User user, Post post, Comment parents){
+    public Comment toEntity(User user, Comment parents){
         return Comment.builder()
                 .user(user)
-                .post(post)
+                .post(parents.getPost())
                 .parents(parents)
                 .body(this.body)
                 .build();
