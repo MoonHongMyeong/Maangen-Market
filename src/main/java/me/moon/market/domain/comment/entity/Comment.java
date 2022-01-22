@@ -48,4 +48,8 @@ public class Comment extends BaseTimeEntity {
     public void update(CommentUpdateRequest dto) {
         this.body=dto.getBody();
     }
+
+    public void delete() {
+        this.removed = true;
+    }
 }

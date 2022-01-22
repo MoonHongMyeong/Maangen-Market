@@ -43,7 +43,17 @@ public class CommentService {
         comment.update(dto);
     }
 
+    public void delete(Long commentId, SessionUser user) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CommentNotFoundException(commentId.toString()));
+
+        isValidAuthor(user, comment);
+
+        comment.delete();
+    }
+
     private void isValidAuthor(SessionUser user, Comment comment) {
         if(new SessionUser(comment.getAuthor()) != user) throw new UnAuthorizedAccessException("");
     }
+
 }

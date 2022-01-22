@@ -42,4 +42,15 @@ public class CommentApiController {
 
         return ResponseEntity.ok().build();
     }
+
+    @LoginRequired
+    @DeleteMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable(name = "postId") Long postId,
+                                             @PathVariable(name = "commentId") Long commentId,
+                                             @LoginUser SessionUser user){
+
+        commentService.delete(commentId, user);
+
+        return ResponseEntity.ok().build();
+    }
 }
