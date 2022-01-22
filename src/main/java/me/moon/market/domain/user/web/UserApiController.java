@@ -4,18 +4,18 @@ import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.user.dto.LoginUserRequest;
 import me.moon.market.domain.user.dto.UserResponse;
 import me.moon.market.domain.user.dto.UserSaveRequest;
+import me.moon.market.domain.user.dto.UserUpdateRequest;
 import me.moon.market.domain.user.service.LoginService;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.domain.user.service.UserManageService;
 import me.moon.market.global.annotation.LoginRequired;
 import me.moon.market.global.annotation.LoginUser;
 import me.moon.market.global.dto.SessionUser;
+import me.moon.market.global.error.exception.ErrorCode;
+import me.moon.market.global.error.exception.UnAuthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -39,6 +39,19 @@ public class UserApiController {
     public ResponseEntity<UserResponse> getProfile(@LoginUser SessionUser user){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new UserResponse(findService.findBySessionUser(user)));
+    }
+
+    @LoginRequired
+    @PutMapping("/profile")
+    public ResponseEntity<HttpStatus> updateMyProfile(@Valid UserUpdateRequest dto, @LoginUser SessionUser user){
+
+        if(dto.getPhone() != user.getPhone()){
+            throw new UnAuthorizedAccessException("본인의 정보만 수정할 수 있습니다.", ErrorCode.UNAUTHORIZED_ACCESS);
+        }
+
+        userService.updateMyProfile(dto);
+
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PostMapping("/signIn")

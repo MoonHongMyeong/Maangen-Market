@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.user.dao.UserRepository;
 import me.moon.market.domain.user.dto.LoginUserRequest;
 import me.moon.market.domain.user.dto.UserSaveRequest;
+import me.moon.market.domain.user.dto.UserUpdateRequest;
 import me.moon.market.domain.user.entity.User;
 import me.moon.market.domain.user.exception.EmailDuplicateException;
 import me.moon.market.domain.user.exception.LoginWrongException;
@@ -41,5 +42,15 @@ public class UserManageService {
             throw new LoginWrongException("");
         }
         return new SessionUser(user);
+    }
+
+    public void updateMyProfile(UserUpdateRequest dto) {
+        if(userRepository.existsByPhone(dto.getPhone())) throw new PhoneDuplicateException(dto.getPhone());
+        if(userRepository.existsByNickname(dto.getNickname())) throw new NicknameDuplicateException(dto.getNickname());
+
+        User user = userRepository.findByPhone(dto.getPhone())
+                .orElseThrow(() ->new UserNotFoundException(dto.getPhone()));
+
+        user.updateMyProfile(dto);
     }
 }
