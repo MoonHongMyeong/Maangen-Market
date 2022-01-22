@@ -56,6 +56,10 @@ public class Post extends BaseTimeEntity {
         this.content=dto.getContent();
     }
 
+    public void changeStatus(TradeStatus status){
+        this.tradeStatus=status;
+    }
+
     public void delete() {
         this.removed = true;
     }

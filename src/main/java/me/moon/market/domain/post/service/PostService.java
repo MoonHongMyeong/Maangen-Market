@@ -6,9 +6,11 @@ import me.moon.market.domain.post.dto.PostSaveRequest;
 import me.moon.market.domain.post.dto.PostUpdateRequest;
 import me.moon.market.domain.post.entity.Category;
 import me.moon.market.domain.post.entity.Post;
+import me.moon.market.domain.post.entity.TradeStatus;
 import me.moon.market.domain.post.exception.PostNotFoundException;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.global.dto.SessionUser;
+import me.moon.market.global.error.exception.InvalidValueException;
 import me.moon.market.global.error.exception.UnAuthorizedAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +44,28 @@ public class PostService {
 
         post.setCategory(category);
         post.update(dto);
+    }
+
+    public void updateTradeStatus(String status, Long postId, SessionUser user) {
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId.toString()));
+
+        isValidAuthor(user, post);
+
+        switch (status){
+            case "SALE" :
+                post.changeStatus(TradeStatus.SALE);
+                break;
+            case "RESERVED" :
+                post.changeStatus(TradeStatus.RESERVED);
+                break;
+            case "SOLD" :
+                post.changeStatus(TradeStatus.SOLD);
+                break;
+            default :
+                throw new InvalidValueException(status);
+        }
     }
 
     public void delete(Long postId, SessionUser user) {

@@ -39,6 +39,15 @@ public class PostApiController {
     }
 
     @LoginRequired
+    @PutMapping("/posts/{postId}/status")
+    public ResponseEntity<HttpStatus> updateTradeStatus(@RequestParam(name = "status") String status, @PathVariable(name = "postId") Long postId, @LoginUser SessionUser user){
+
+        postService.updateTradeStatus(status, postId, user);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @LoginRequired
     @DeleteMapping("/posts/{postId}")
     public ResponseEntity<HttpStatus> delete(@PathVariable(name = "postId") Long postId, @LoginUser SessionUser user){
 
