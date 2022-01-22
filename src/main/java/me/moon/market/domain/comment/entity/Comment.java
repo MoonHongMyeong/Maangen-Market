@@ -31,7 +31,7 @@ public class Comment extends BaseTimeEntity {
     private String body;
 
     @ManyToOne
-    @Column(name = "PARENTS_ID")
+    @JoinColumn(name = "PARENTS_ID")
     private Comment parents;
 
     @Column(name = "IS_REMOVED")
