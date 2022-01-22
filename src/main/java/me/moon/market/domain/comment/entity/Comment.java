@@ -3,6 +3,7 @@ package me.moon.market.domain.comment.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.moon.market.domain.comment.dto.CommentUpdateRequest;
 import me.moon.market.domain.post.entity.Post;
 import me.moon.market.domain.user.entity.User;
 import me.moon.market.global.entity.BaseTimeEntity;
@@ -42,5 +43,9 @@ public class Comment extends BaseTimeEntity {
         this.post=post;
         this.body=body;
         this.parents=parents;
+    }
+
+    public void update(CommentUpdateRequest dto) {
+        this.body=dto.getBody();
     }
 }

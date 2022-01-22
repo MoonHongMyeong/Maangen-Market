@@ -2,16 +2,14 @@ package me.moon.market.domain.comment.web;
 
 import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.comment.dto.CommentSaveRequest;
+import me.moon.market.domain.comment.dto.CommentUpdateRequest;
 import me.moon.market.domain.comment.service.CommentService;
 import me.moon.market.global.annotation.LoginRequired;
 import me.moon.market.global.annotation.LoginUser;
 import me.moon.market.global.dto.SessionUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -31,5 +29,17 @@ public class CommentApiController {
         commentService.create(postId, user, dto);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @LoginRequired
+    @PutMapping("/posts/{postId}/comments/{commentId}")
+    public ResponseEntity<HttpStatus> update(@PathVariable(name = "postId") Long postId,
+                                             @PathVariable(name = "commentId") Long commentId,
+                                             @LoginUser SessionUser user,
+                                             @Valid CommentUpdateRequest dto){
+
+        commentService.update(commentId, user, dto);
+
+        return ResponseEntity.ok().build();
     }
 }
