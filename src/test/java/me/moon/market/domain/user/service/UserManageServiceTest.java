@@ -23,9 +23,9 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-public class UserSignUpServiceTest extends MockTest {
+public class UserManageServiceTest extends MockTest {
     @InjectMocks
-    private UserSignUpService signUpService;
+    private UserManageService signUpService;
 
     @Mock
     private UserRepository userRepository;

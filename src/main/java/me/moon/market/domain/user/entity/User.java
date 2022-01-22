@@ -3,15 +3,18 @@ package me.moon.market.domain.user.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.moon.market.domain.user.dto.UserUpdateRequest;
+import me.moon.market.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
 
 @Getter
 @NoArgsConstructor
 @Entity
-public class User {
+public class User extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "EMAIL")
@@ -38,4 +41,9 @@ public class User {
         this.nickname=nickname;
     }
 
+    public void updateMyProfile(UserUpdateRequest dto) {
+        this.nickname=dto.getNickname();
+        this.phone=dto.getPhone();
+        this.password=dto.getPassword();
+    }
 }
