@@ -30,6 +30,13 @@ public class UserApiController {
                 .body(new UserResponse(userService.doSignUp(dto)));
     }
 
+    @LoginRequired
+    @GetMapping("/profile")
+    public ResponseEntity<UserResponse> getProfile(SessionUser user){
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(new UserResponse(findService.findBySessionUser(user)));
+    }
+
     @PostMapping("/signIn")
     public ResponseEntity<SessionUser> signIn(@Valid LoginUserRequest dto){
 
@@ -42,7 +49,7 @@ public class UserApiController {
     }
 
     @LoginRequired
-    @GetMapping("/logout")
+    @GetMapping("/signOut")
     public ResponseEntity<HttpStatus> signOut(){
         loginService.logout();
         return ResponseEntity.ok(HttpStatus.OK);
