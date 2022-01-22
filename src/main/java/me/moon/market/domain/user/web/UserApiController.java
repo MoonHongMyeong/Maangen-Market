@@ -36,7 +36,7 @@ public class UserApiController {
     @GetMapping("/profile")
     public ResponseEntity<UserResponse> getProfile(@LoginUser SessionUser user){
         return ResponseEntity.status(HttpStatus.OK)
-                .body(new UserResponse(findService.findBySessionUser(user)));
+                .body(new UserResponse(findService.findUserBySessionUser(user)));
     }
 
     @LoginRequired

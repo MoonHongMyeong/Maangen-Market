@@ -20,7 +20,13 @@ public enum ErrorCode {
     PHONE_DUPLICATED(409, "Phone number Duplicated", "중복된 전화번호 입니다."),
     NICKNAME_DUPLICATED(409, "Nickname Duplicated", "중복된 닉네임 입니다."),
     USER_NOT_FOUND(409, "User Not Found", "찾을 수 없는 사용자 입니다."),
-    WRONG_LOGIN(409, "Wrong login value", "아이디 혹은 비밀번호가 잘못되었습니다.")
+    WRONG_LOGIN(409, "Wrong login value", "아이디 혹은 비밀번호가 잘못되었습니다."),
+
+    //Category
+    CATEGORY_NOT_FOUND(409, "Category Not Found", "카테고리를 찾을 수 없습니다."),
+
+    //Post
+    POST_NOT_FOUND(409, "Post Not Found", "해당 포스트를 찾을 수 없습니다.")
     ;
 
     private final int status;
