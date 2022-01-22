@@ -1,9 +1,13 @@
 package me.moon.market.domain.user.web;
 
 import lombok.RequiredArgsConstructor;
+import me.moon.market.domain.user.dto.LoginUserRequest;
 import me.moon.market.domain.user.dto.UserResponse;
 import me.moon.market.domain.user.dto.UserSaveRequest;
-import me.moon.market.domain.user.service.UserSignUpService;
+import me.moon.market.domain.user.service.LoginService;
+import me.moon.market.domain.user.service.UserFindService;
+import me.moon.market.domain.user.service.UserManageService;
+import me.moon.market.global.dto.SessionUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,11 +21,24 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 public class UserApiController {
 
-    private final UserSignUpService signUpService;
+    private final UserManageService userService;
+    private final UserFindService findService;
+    private final LoginService loginService;
 
     @PostMapping("/users")
     public ResponseEntity<UserResponse> signUp(@Valid UserSaveRequest dto){
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new UserResponse(signUpService.doSignUp(dto)));
+                .body(new UserResponse(userService.doSignUp(dto)));
+    }
+
+    @PostMapping("/signIn")
+    public ResponseEntity<SessionUser> signIn(@Valid LoginUserRequest dto){
+
+        SessionUser user = userService.findUserByLoginRequest(dto);
+
+        loginService.login(user);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(user);
     }
 }
