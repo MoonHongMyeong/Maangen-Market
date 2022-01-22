@@ -38,4 +38,13 @@ public class PostApiController {
         return ResponseEntity.ok().build();
     }
 
+    @LoginRequired
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable(name = "postId") Long postId, @LoginUser SessionUser user){
+
+        postService.delete(postId, user);
+
+        return ResponseEntity.ok().build();
+    }
+
 }

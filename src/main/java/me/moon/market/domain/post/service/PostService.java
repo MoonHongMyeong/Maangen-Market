@@ -44,6 +44,15 @@ public class PostService {
         post.update(dto);
     }
 
+    public void delete(Long postId, SessionUser user) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new PostNotFoundException(postId.toString()));
+
+        isValidAuthor(user, post);
+
+        post.delete();
+    }
+
     private void isValidAuthor(SessionUser user, Post post) {
         if(new SessionUser(post.getAuthor()) != user) throw new UnAuthorizedAccessException("");
     }
