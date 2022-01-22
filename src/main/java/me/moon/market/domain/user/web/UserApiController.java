@@ -8,10 +8,14 @@ import me.moon.market.domain.user.service.LoginService;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.domain.user.service.UserManageService;
 import me.moon.market.global.annotation.LoginRequired;
+import me.moon.market.global.annotation.LoginUser;
 import me.moon.market.global.dto.SessionUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 
@@ -32,7 +36,7 @@ public class UserApiController {
 
     @LoginRequired
     @GetMapping("/profile")
-    public ResponseEntity<UserResponse> getProfile(SessionUser user){
+    public ResponseEntity<UserResponse> getProfile(@LoginUser SessionUser user){
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new UserResponse(findService.findBySessionUser(user)));
     }

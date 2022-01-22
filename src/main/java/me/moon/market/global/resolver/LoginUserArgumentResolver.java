@@ -1,7 +1,7 @@
 package me.moon.market.global.resolver;
 
 import lombok.RequiredArgsConstructor;
-import me.moon.market.global.annotation.LoginRequired;
+import me.moon.market.global.annotation.LoginUser;
 import me.moon.market.global.dto.SessionUser;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        boolean isLoginUserAnnotation = parameter.getParameterAnnotation(LoginRequired.class) != null;
+        boolean isLoginUserAnnotation = parameter.getParameterAnnotation(LoginUser.class) != null;
         boolean isUserClass = SessionUser.class.equals(parameter.getParameterType());
 
         return isLoginUserAnnotation && isUserClass;
