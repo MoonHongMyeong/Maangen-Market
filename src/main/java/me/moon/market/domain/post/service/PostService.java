@@ -7,7 +7,6 @@ import me.moon.market.domain.post.dto.PostUpdateRequest;
 import me.moon.market.domain.post.entity.Category;
 import me.moon.market.domain.post.entity.Post;
 import me.moon.market.domain.post.entity.TradeStatus;
-import me.moon.market.domain.post.exception.PostNotFoundException;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.global.dto.SessionUser;
 import me.moon.market.global.error.exception.InvalidValueException;
@@ -20,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
-    private PostRepository postRepository;
-    private UserFindService userFindService;
-    private CategoryFindService categoryFindService;
+    private final PostRepository postRepository;
+    private final UserFindService userFindService;
+    private final CategoryFindService categoryFindService;
+    private final PostFindService postFindService;
 
     public void create(PostSaveRequest dto, SessionUser user) {
 
@@ -36,8 +36,7 @@ public class PostService {
 
     public void update(PostUpdateRequest dto, Long postId, SessionUser user) {
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId.toString()));
+        Post post = postFindService.findPostById(postId);
         Category category = categoryFindService.findByCategoryName(dto.getCategory());
 
         isValidAuthor(user, post);
@@ -48,8 +47,7 @@ public class PostService {
 
     public void updateTradeStatus(String status, Long postId, SessionUser user) {
 
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId.toString()));
+        Post post = postFindService.findPostById(postId);
 
         isValidAuthor(user, post);
 
@@ -69,8 +67,7 @@ public class PostService {
     }
 
     public void delete(Long postId, SessionUser user) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new PostNotFoundException(postId.toString()));
+        Post post = postFindService.findPostById(postId);
 
         isValidAuthor(user, post);
 
