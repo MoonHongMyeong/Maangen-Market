@@ -11,8 +11,6 @@ import me.moon.market.domain.user.service.UserManageService;
 import me.moon.market.global.annotation.LoginRequired;
 import me.moon.market.global.annotation.LoginUser;
 import me.moon.market.global.dto.SessionUser;
-import me.moon.market.global.error.exception.ErrorCode;
-import me.moon.market.global.error.exception.UnAuthorizedAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,11 +42,7 @@ public class UserApiController {
     @LoginRequired
     @PutMapping("/profile")
     public ResponseEntity<HttpStatus> updateMyProfile(@Valid UserUpdateRequest dto, @LoginUser SessionUser user){
-
-        if(dto.getPhone() != user.getPhone()){
-            throw new UnAuthorizedAccessException("본인의 정보만 수정할 수 있습니다.", ErrorCode.UNAUTHORIZED_ACCESS);
-        }
-
+        
         userService.updateMyProfile(dto);
 
         return ResponseEntity.ok(HttpStatus.OK);
