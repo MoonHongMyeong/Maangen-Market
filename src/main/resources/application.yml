@@ -1,0 +1,10 @@
+server :
+    port : 8000
+
+spring :
+    profiles :
+        active : test
+        include : aws
+
+    jpa :
+        show-sql : true
