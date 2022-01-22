@@ -7,12 +7,11 @@ import me.moon.market.domain.user.dto.UserSaveRequest;
 import me.moon.market.domain.user.service.LoginService;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.domain.user.service.UserManageService;
+import me.moon.market.global.annotation.LoginRequired;
 import me.moon.market.global.dto.SessionUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -40,5 +39,12 @@ public class UserApiController {
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(user);
+    }
+
+    @LoginRequired
+    @GetMapping("/logout")
+    public ResponseEntity<HttpStatus> signOut(){
+        loginService.logout();
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }
