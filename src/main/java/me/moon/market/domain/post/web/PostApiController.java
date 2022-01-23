@@ -1,12 +1,15 @@
 package me.moon.market.domain.post.web;
 
 import lombok.RequiredArgsConstructor;
+import me.moon.market.domain.post.dto.PostListResponse;
 import me.moon.market.domain.post.dto.PostSaveRequest;
 import me.moon.market.domain.post.dto.PostUpdateRequest;
 import me.moon.market.domain.post.service.PostService;
 import me.moon.market.global.annotation.LoginRequired;
 import me.moon.market.global.annotation.LoginUser;
 import me.moon.market.global.dto.SessionUser;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +24,15 @@ import java.util.List;
 public class PostApiController {
 
     private final PostService postService;
+
+    @LoginRequired
+    @GetMapping("/posts")
+    public ResponseEntity<PageImpl<PostListResponse>> getPosts(@LoginUser SessionUser user, Pageable pageable){
+
+        PageImpl<PostListResponse> response = postService.getPosts(user, pageable);
+
+        return ResponseEntity.ok(response);
+    }
 
     @LoginRequired
     @PostMapping("/posts")

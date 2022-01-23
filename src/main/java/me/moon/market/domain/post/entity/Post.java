@@ -32,6 +32,9 @@ public class Post extends BaseTimeEntity {
     @Column(name = "CONTENT")
     private String content;
 
+    @Column(name = "THUMBNAIL")
+    private String thumbnail;
+
     @Column(name = "TRADE_STATUS")
     private TradeStatus tradeStatus;
 

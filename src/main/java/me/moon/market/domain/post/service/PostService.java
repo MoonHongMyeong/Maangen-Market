@@ -4,20 +4,25 @@ import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.image.service.ImageSaveService;
 import me.moon.market.domain.image.service.ImageUploadService;
 import me.moon.market.domain.post.dao.PostRepository;
+import me.moon.market.domain.post.dto.PostListResponse;
 import me.moon.market.domain.post.dto.PostSaveRequest;
 import me.moon.market.domain.post.dto.PostUpdateRequest;
 import me.moon.market.domain.post.entity.Category;
 import me.moon.market.domain.post.entity.Post;
 import me.moon.market.domain.post.entity.TradeStatus;
+import me.moon.market.domain.user.entity.User;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.global.dto.SessionUser;
 import me.moon.market.global.error.exception.InvalidValueException;
 import me.moon.market.global.error.exception.UnAuthorizedAccessException;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -38,10 +43,9 @@ public class PostService {
         Category category = categoryFindService.findByCategoryName(dto.getCategory());
 
         post.setCategory(category);
-
         Post savedPost = postRepository.save(post);
-        List<String> filePaths = imageUploadService.uploadImages(photos);
 
+        List<String> filePaths = imageUploadService.uploadImages(photos);
         imageSaveService.savePostImages(filePaths, savedPost);
     }
 
@@ -89,4 +93,15 @@ public class PostService {
         if(new SessionUser(post.getAuthor()) != user) throw new UnAuthorizedAccessException("");
     }
 
+    public PageImpl<PostListResponse> getPosts(SessionUser sessionUser, Pageable pageable) {
+
+        User user = userFindService.findUserBySessionUser(sessionUser);
+
+        PageImpl<Post> queryResults = postRepository.getPostsByUserAddress(user.getLocation().getLongitude(), user.getLocation().getLatitude(), pageable);
+
+        List<PostListResponse> postToPostListResponse = queryResults.getContent().stream().map(post -> new PostListResponse(post))
+                .collect(Collectors.toList());
+
+        return new PageImpl<PostListResponse>(postToPostListResponse, queryResults.getPageable(), queryResults.getTotalPages());
+    }
 }
