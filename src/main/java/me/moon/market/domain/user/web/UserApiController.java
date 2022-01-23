@@ -1,10 +1,7 @@
 package me.moon.market.domain.user.web;
 
 import lombok.RequiredArgsConstructor;
-import me.moon.market.domain.user.dto.LoginUserRequest;
-import me.moon.market.domain.user.dto.UserResponse;
-import me.moon.market.domain.user.dto.UserSaveRequest;
-import me.moon.market.domain.user.dto.UserUpdateRequest;
+import me.moon.market.domain.user.dto.*;
 import me.moon.market.domain.user.service.LoginService;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.domain.user.service.UserManageService;
@@ -46,6 +43,15 @@ public class UserApiController {
         userService.updateMyProfile(dto);
 
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @LoginRequired
+    @PutMapping("/location")
+    public ResponseEntity<HttpStatus> setUserGeolocation(@LoginUser SessionUser user,
+                                                           @Valid GeolocationRequest dto){
+        userService.setUserGeolocation(user, dto);
+
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping("/signIn")
