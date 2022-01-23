@@ -2,6 +2,7 @@ package me.moon.market.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.image.service.ImageSaveService;
+import me.moon.market.domain.image.service.ImageUploadService;
 import me.moon.market.domain.post.dao.PostRepository;
 import me.moon.market.domain.post.dto.PostSaveRequest;
 import me.moon.market.domain.post.dto.PostUpdateRequest;
@@ -17,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -28,7 +28,8 @@ public class PostService {
     private final UserFindService userFindService;
     private final CategoryFindService categoryFindService;
     private final PostFindService postFindService;
-    private final ImageSaveService imageService;
+    private final ImageSaveService imageSaveService;
+    private final ImageUploadService imageUploadService;
 
     @Transactional(rollbackFor = Exception.class)
     public void create(PostSaveRequest dto, List<MultipartFile> photos, SessionUser user) {
@@ -39,12 +40,9 @@ public class PostService {
         post.setCategory(category);
 
         Post savedPost = postRepository.save(post);
+        List<String> filePaths = imageUploadService.uploadImages(photos);
 
-        List<String> filePaths = photos.stream()
-                .map(MultipartFile::getOriginalFilename)
-                .collect(Collectors.toList());
-
-        imageService.savePostImages(filePaths, savedPost);
+        imageSaveService.savePostImages(filePaths, savedPost);
     }
 
     public void update(PostUpdateRequest dto, Long postId, SessionUser user) {
