@@ -2,6 +2,7 @@ package me.moon.market.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.user.dao.UserRepository;
+import me.moon.market.domain.user.dto.GeolocationRequest;
 import me.moon.market.domain.user.dto.LoginUserRequest;
 import me.moon.market.domain.user.dto.UserSaveRequest;
 import me.moon.market.domain.user.dto.UserUpdateRequest;
@@ -52,5 +53,12 @@ public class UserManageService {
                 .orElseThrow(() ->new UserNotFoundException(dto.getPhone()));
 
         user.updateMyProfile(dto);
+    }
+
+    public void setUserGeolocation(SessionUser sessionUser, GeolocationRequest dto) {
+
+        User user = findService.findUserBySessionUser(sessionUser);
+
+        user.setUserGeolocation(dto);
     }
 }

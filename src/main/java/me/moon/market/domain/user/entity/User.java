@@ -3,7 +3,10 @@ package me.moon.market.domain.user.entity;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import me.moon.market.domain.model.Address;
+import me.moon.market.domain.model.Location;
 import me.moon.market.domain.user.dto.UserUpdateRequest;
+import me.moon.market.domain.user.dto.GeolocationRequest;
 import me.moon.market.global.entity.BaseTimeEntity;
 
 import javax.persistence.*;
@@ -32,6 +35,12 @@ public class User extends BaseTimeEntity {
     @Column(name = "NICKNAME")
     private String nickname;
 
+    @Embedded
+    private Address address;
+
+    @Embedded
+    private Location location;
+
     @Builder
     public User(String email, String password, String name, String phone, String nickname){
         this.email=email;
@@ -45,5 +54,10 @@ public class User extends BaseTimeEntity {
         this.nickname=dto.getNickname();
         this.phone=dto.getPhone();
         this.password=dto.getPassword();
+    }
+
+    public void setUserGeolocation(GeolocationRequest dto){
+        this.address= dto.toAddress();
+        this.location= dto.toLocation();
     }
 }
