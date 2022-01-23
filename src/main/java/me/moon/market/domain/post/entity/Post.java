@@ -54,6 +54,13 @@ public class Post extends BaseTimeEntity {
         this.category=category;
     }
 
+    public void setThumbnail(String thumbnailUrl){
+        if(thumbnailUrl == null || thumbnailUrl.isEmpty()){
+            this.thumbnail="defaultImage.png";
+        }
+        this.thumbnail=thumbnailUrl;
+    }
+
     public void update(PostUpdateRequest dto) {
         this.title=dto.getTitle();
         this.content=dto.getContent();

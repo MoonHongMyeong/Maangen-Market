@@ -40,12 +40,14 @@ public class PostService {
     public void create(PostSaveRequest dto, List<MultipartFile> photos, SessionUser user) {
 
         Post post = dto.toEntity(userFindService.findUserBySessionUser(user));
-        Category category = categoryFindService.findByCategoryName(dto.getCategory());
 
+        Category category = categoryFindService.findByCategoryName(dto.getCategory());
         post.setCategory(category);
-        Post savedPost = postRepository.save(post);
 
         List<String> filePaths = imageUploadService.uploadImages(photos);
+        post.setThumbnail(filePaths.get(0));
+
+        Post savedPost = postRepository.save(post);
         imageSaveService.savePostImages(filePaths, savedPost);
     }
 
