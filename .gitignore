@@ -38,3 +38,6 @@ out/
 
 ### properties ###
 *.properties
+
+### aws ###
+application-aws.yml
