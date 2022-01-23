@@ -10,8 +10,10 @@ import me.moon.market.global.dto.SessionUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,16 +24,20 @@ public class PostApiController {
 
     @LoginRequired
     @PostMapping("/posts")
-    public ResponseEntity<HttpStatus> create(@Valid PostSaveRequest dto, @LoginUser SessionUser user){
+    public ResponseEntity<HttpStatus> create(@RequestPart @Valid PostSaveRequest dto,
+                                             @RequestPart(required = false) List<MultipartFile> photos,
+                                             @LoginUser SessionUser user){
 
-        postService.create(dto, user);
+        postService.create(dto, photos, user);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @LoginRequired
     @PutMapping("/posts/{postId}")
-    public ResponseEntity<HttpStatus> update(@Valid PostUpdateRequest dto, @PathVariable(name = "postId") Long postId, @LoginUser SessionUser user){
+    public ResponseEntity<HttpStatus> update(@Valid PostUpdateRequest dto,
+                                             @PathVariable(name = "postId") Long postId,
+                                             @LoginUser SessionUser user){
 
         postService.update(dto, postId, user);
 
@@ -40,7 +46,9 @@ public class PostApiController {
 
     @LoginRequired
     @PutMapping("/posts/{postId}/status")
-    public ResponseEntity<HttpStatus> updateTradeStatus(@RequestParam(name = "status") String status, @PathVariable(name = "postId") Long postId, @LoginUser SessionUser user){
+    public ResponseEntity<HttpStatus> updateTradeStatus(@RequestParam(name = "status") String status,
+                                                        @PathVariable(name = "postId") Long postId,
+                                                        @LoginUser SessionUser user){
 
         postService.updateTradeStatus(status, postId, user);
 
@@ -49,7 +57,8 @@ public class PostApiController {
 
     @LoginRequired
     @DeleteMapping("/posts/{postId}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable(name = "postId") Long postId, @LoginUser SessionUser user){
+    public ResponseEntity<HttpStatus> delete(@PathVariable(name = "postId") Long postId,
+                                             @LoginUser SessionUser user){
 
         postService.delete(postId, user);
 
