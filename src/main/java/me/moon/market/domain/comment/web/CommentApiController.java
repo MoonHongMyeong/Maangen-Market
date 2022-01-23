@@ -1,6 +1,7 @@
 package me.moon.market.domain.comment.web;
 
 import lombok.RequiredArgsConstructor;
+import me.moon.market.domain.comment.dto.CommentResponse;
 import me.moon.market.domain.comment.dto.CommentSaveRequest;
 import me.moon.market.domain.comment.dto.CommentUpdateRequest;
 import me.moon.market.domain.comment.service.CommentService;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,6 +21,14 @@ import javax.validation.Valid;
 public class CommentApiController {
 
     private final CommentService commentService;
+
+    @LoginRequired
+    @GetMapping("/posts/{postId}/comments")
+    public ResponseEntity<List<CommentResponse>> getComments(@PathVariable(name = "postId") Long postId){
+
+        return ResponseEntity.ok(commentService.getComments(postId));
+
+    }
 
     @LoginRequired
     @PostMapping("/posts/{postId}/comments")

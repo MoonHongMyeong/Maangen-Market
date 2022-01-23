@@ -2,6 +2,7 @@ package me.moon.market.domain.comment.service;
 
 import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.comment.dao.CommentRepository;
+import me.moon.market.domain.comment.dto.CommentResponse;
 import me.moon.market.domain.comment.dto.CommentSaveRequest;
 import me.moon.market.domain.comment.dto.CommentUpdateRequest;
 import me.moon.market.domain.comment.entity.Comment;
@@ -15,6 +16,9 @@ import me.moon.market.global.error.exception.UnAuthorizedAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -23,6 +27,16 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostFindService postFindService;
     private final UserFindService userFindService;
+
+    @Transactional(readOnly = true)
+    public List<CommentResponse> getComments(Long postId) {
+
+        Post post = postFindService.findPostById(postId);
+
+        return commentRepository.findCommentsByPost(post).stream()
+                .map(comment -> new CommentResponse(comment))
+                .collect(Collectors.toList());
+    }
 
     public void create(Long postId, SessionUser sessionUser, CommentSaveRequest dto) {
 
@@ -66,5 +80,6 @@ public class CommentService {
     private void isValidAuthor(SessionUser user, Comment comment) {
         if(new SessionUser(comment.getAuthor()) != user) throw new UnAuthorizedAccessException("");
     }
+
 
 }
