@@ -1,10 +1,13 @@
 package me.moon.market.domain.post.service;
 
 import lombok.RequiredArgsConstructor;
+import me.moon.market.domain.image.entity.Image;
+import me.moon.market.domain.image.service.ImageFindService;
 import me.moon.market.domain.image.service.ImageSaveService;
 import me.moon.market.domain.image.service.ImageUploadService;
 import me.moon.market.domain.post.dao.PostRepository;
 import me.moon.market.domain.post.dto.PostListResponse;
+import me.moon.market.domain.post.dto.PostResponse;
 import me.moon.market.domain.post.dto.PostSaveRequest;
 import me.moon.market.domain.post.dto.PostUpdateRequest;
 import me.moon.market.domain.post.entity.Category;
@@ -13,6 +16,7 @@ import me.moon.market.domain.post.entity.TradeStatus;
 import me.moon.market.domain.user.entity.User;
 import me.moon.market.domain.user.service.UserFindService;
 import me.moon.market.global.dto.SessionUser;
+import me.moon.market.global.error.exception.ErrorCode;
 import me.moon.market.global.error.exception.InvalidValueException;
 import me.moon.market.global.error.exception.UnAuthorizedAccessException;
 import org.springframework.data.domain.PageImpl;
@@ -33,6 +37,7 @@ public class PostService {
     private final UserFindService userFindService;
     private final CategoryFindService categoryFindService;
     private final PostFindService postFindService;
+    private final ImageFindService imageFindService;
     private final ImageSaveService imageSaveService;
     private final ImageUploadService imageUploadService;
 
@@ -106,4 +111,44 @@ public class PostService {
 
         return new PageImpl<PostListResponse>(postToPostListResponse, queryResults.getPageable(), queryResults.getTotalPages());
     }
+
+    @Transactional(readOnly = true)
+    public PostResponse getPost(SessionUser sessionUser, Long postId) {
+
+        User user = userFindService.findUserBySessionUser(sessionUser);
+        Post post = postFindService.findPostById(postId);
+
+        if(!isValidCoordinate(user, post)){
+            throw new InvalidValueException("",ErrorCode.HANDLE_ACCESS_DENIED);
+        }
+
+        PostResponse response = new PostResponse(post);
+
+        List<PostListResponse> anotherPosts = postFindService.findPostByUser(user);
+        List<Image> images = imageFindService.findAllByPost(post);
+
+        response.setAnotherPosts(anotherPosts);
+        response.setImages(images);
+
+        return response;
+    }
+
+    private boolean isValidCoordinate(User user, Post post) {
+
+        Double postLong = post.getAuthor().getLocation().getLongitude();
+        Double postLat = post.getAuthor().getLocation().getLatitude();
+        Double userLong = user.getLocation().getLongitude();
+        Double userLat = user.getLocation().getLatitude();
+
+        if(postLong < userLong - 1/88.64  || postLong > userLong + 1/88.64){
+            return false;
+        }
+
+        if(postLat < userLat - 1/109.958489129649955 || postLat < userLat + 1/109.958489129649955){
+            return false;
+        }
+
+        return true;
+    }
+
 }

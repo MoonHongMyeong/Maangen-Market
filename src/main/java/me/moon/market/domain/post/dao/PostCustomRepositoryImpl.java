@@ -3,6 +3,7 @@ package me.moon.market.domain.post.dao;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import me.moon.market.domain.post.entity.Post;
+import me.moon.market.domain.user.entity.User;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -35,5 +36,10 @@ public class PostCustomRepositoryImpl extends QuerydslRepositorySupport implemen
         List<Post> results = getQuerydsl().applyPagination(pageable,query).fetch();
 
         return new PageImpl<>(results,pageable,totalCount);
+    }
+
+    @Override
+    public List<Post> findPostByUser(User user) {
+        return null;
     }
 }

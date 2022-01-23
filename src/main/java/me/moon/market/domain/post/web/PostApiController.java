@@ -2,6 +2,7 @@ package me.moon.market.domain.post.web;
 
 import lombok.RequiredArgsConstructor;
 import me.moon.market.domain.post.dto.PostListResponse;
+import me.moon.market.domain.post.dto.PostResponse;
 import me.moon.market.domain.post.dto.PostSaveRequest;
 import me.moon.market.domain.post.dto.PostUpdateRequest;
 import me.moon.market.domain.post.service.PostService;
@@ -30,6 +31,15 @@ public class PostApiController {
     public ResponseEntity<PageImpl<PostListResponse>> getPosts(@LoginUser SessionUser user, Pageable pageable){
 
         PageImpl<PostListResponse> response = postService.getPosts(user, pageable);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @LoginRequired
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostResponse> getPost(@LoginUser SessionUser user, @PathVariable(name = "postId") Long postId){
+
+        PostResponse response = postService.getPost(user, postId);
 
         return ResponseEntity.ok(response);
     }

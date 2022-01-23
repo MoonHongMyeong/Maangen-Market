@@ -29,6 +29,9 @@ public class Post extends BaseTimeEntity {
     @Column(name = "TITLE")
     private String title;
 
+    @Column(name = "PRICE")
+    private int price;
+
     @Column(name = "CONTENT")
     private String content;
 
@@ -42,10 +45,11 @@ public class Post extends BaseTimeEntity {
     private boolean removed = false;
 
     @Builder
-    public Post(Category category, User author, String title, String content, TradeStatus tradeStatus){
+    public Post(Category category, User author, String title, int price, String content, TradeStatus tradeStatus){
         this.category=category;
         this.author=author;
         this.title=title;
+        this.price=price;
         this.content=content;
         this.tradeStatus=tradeStatus;
     }
